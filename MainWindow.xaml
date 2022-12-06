@@ -6,11 +6,26 @@
         xmlns:local="clr-namespace:TestApp"
         xmlns:syncfusion="http://schemas.syncfusion.com/wpf"
         xmlns:vm="clr-namespace:TestApp.ViewModel"
+        xmlns:converter="clr-namespace:TestApp.Converter"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <FrameworkElement.Resources>
+        Title="MainWindow" Height="450" Width="800"
+        DataContext="{DynamicResource vm}">
+
+    <Window.Resources>
         <vm:MainViewModel x:Key="vm"/>
-    </FrameworkElement.Resources>
+
+        <converter:ImageConverter x:Key="Conv"/>
+        <DataTemplate x:Key="TemplateWithImage">
+            <StackPanel Orientation="Horizontal">
+                <Image Source="{Binding Path=. , Converter={StaticResource Conv}}"
+                    Width="24"
+                    Height="20"/>
+                <TextBlock Text="{Binding Name}" VerticalAlignment="Center"/>
+            </StackPanel>
+        </DataTemplate>
+    </Window.Resources>
+    
+    
     <Grid Margin="0,0,58,-6">
 
         <Button x:Name="Buttonn"  Content="Add" Margin="279,196,357,196" Click="Buttonn_Click" />
@@ -18,18 +33,30 @@
         <ListView x:Name="ListViewLCombos" Margin="51,0,0,0" Grid.Column="0" Width="179" VerticalAlignment="Center" Height="335"
                   ItemsSource="{Binding ItemsList}" Foreground="Black" SelectionMode="Extended" HorizontalAlignment="Left" DisplayMemberPath="Name" SelectionChanged="ListViewLCombos_SelectionChanged"/>
 
-
-        <syncfusion:SfDataGrid Name ="DG2" AutoGenerateColumns="False" Margin="419,0,0,0" SelectionMode="Extended"
+        <syncfusion:SfDataGrid Name ="DG2" AutoGenerateColumns="False" Margin="418,0,0,0" SelectionMode="Extended"
                                AllowEditing="True"  ItemsSource="{Binding CustItems}"  VirtualizingPanel.IsVirtualizing="False"
                                HorizontalAlignment="Left" ShowRowHeader="True" RowHeaderWidth="25" Height="300" Width="268"
                                VerticalAlignment="Center" AllowDeleting="True"  ColumnSizer="AutoWithLastColumnFill" RowHeight="30"
                                RowSelectionBrush="LightBlue" EditTrigger="OnTap"
                                Foreground="Black" AllowFiltering="True">
             <syncfusion:SfDataGrid.Columns>
-                <syncfusion:GridTemplateColumn HeaderText="Item" Width="200">
+
+                <syncfusion:GridTemplateColumn HeaderText="Item" Width="100">
                     <syncfusion:GridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            
+                            <ComboBox SelectedItem="{Binding FruitorVegie, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" DisplayMemberPath="Name"
+                                      Text="{Binding FruitorVegie.Name}"
+                                      ItemsSource="{Binding DataContext.ItemsList, ElementName=DG2}">
+                                <ComboBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <StackPanel  Orientation="Horizontal">
+                                            <Image Height="24" Width="20"
+                                            Source="{Binding Path=., Converter={StaticResource Conv}}"/>
+                                            <TextBlock Text="{Binding Path=Name}" VerticalAlignment="Center"/>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </ComboBox.ItemTemplate>
+                            </ComboBox>
                         </DataTemplate>
                     </syncfusion:GridTemplateColumn.CellTemplate>
                 </syncfusion:GridTemplateColumn>
@@ -37,6 +64,7 @@
                 <syncfusion:GridNumericColumn HeaderText="Quantity" MappingName ="Quantity"/>
             </syncfusion:SfDataGrid.Columns>
         </syncfusion:SfDataGrid>
+
 
     </Grid>
 </Window>

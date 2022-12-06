@@ -34,7 +34,6 @@ namespace TestApp.Models
             this.Type = FoodType.Vegetable;
         }
 
-
         public event PropertyChangedEventHandler PropertyChanged;
         public void RaisePropertyChanged(string PropertyName)
         {

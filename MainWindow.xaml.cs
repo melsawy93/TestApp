@@ -36,6 +36,7 @@ namespace TestApp
             get { return _selectedFruitsOrVegie; }
             set { _selectedFruitsOrVegie = value; }
         }
+
         private void ListViewLCombos_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             SelectedFruitsOrVegie.Clear();
